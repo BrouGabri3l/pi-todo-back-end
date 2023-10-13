@@ -10,8 +10,6 @@ import {
   Post,
   HttpCode,
   HttpStatus,
-  Get,
-  Req,
   Inject,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -32,6 +30,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @Public()
+  //TODO: adjusts return
   async signIn(@Body() signInDto: ISignInBody) {
     const signedUser = await this.loginUserUserCase
       .getInstance()
@@ -42,10 +41,5 @@ export class AuthController {
       signedUser.value.email,
     );
     return token;
-  }
-
-  @Get('profile')
-  getProfile(@Req() req) {
-    return req.user;
   }
 }

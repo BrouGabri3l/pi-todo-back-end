@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from '@/infra/auth/auth.service';
-import { AuthController } from '@/controllers/auth.controller';
+import { AuthController } from '@/controllers/auth/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 
-import { AuthGuard } from '../infra/auth/auth.guard';
+import { AuthGuard } from '../../infra/auth/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { UseCasesProxyModule } from '@/domain/proxies/useCasesProxy.module';
 

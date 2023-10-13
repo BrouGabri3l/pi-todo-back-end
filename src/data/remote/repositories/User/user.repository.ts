@@ -10,6 +10,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class UserRepository implements IUserRepository {
   constructor(private readonly _prisma: PrismaService) {}
+
   async findUserByEmail(
     email: string,
   ): Promise<TEither<TApplicationError, User>> {
@@ -19,6 +20,20 @@ export class UserRepository implements IUserRepository {
       });
       if (!user) return left(new NotFound());
 
+      return right(user);
+    } catch (error) {
+      if (error instanceof Error)
+        return left(new CriticalError({ error: [error.message] }));
+      return left(
+        new CriticalError({ critical: ['A critical error happened'] }),
+      );
+    }
+  }
+
+  async getById(id: string): Promise<TEither<TApplicationError, User>> {
+    try {
+      const user = await this._prisma.user.findUnique({ where: { id } });
+      if (!user) return left(new NotFound());
       return right(user);
     } catch (error) {
       if (error instanceof Error)

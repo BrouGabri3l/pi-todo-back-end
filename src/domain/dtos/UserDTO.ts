@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 
-export class User {
+export class UserDTO {
   @AutoMap()
   public id: string;
 
