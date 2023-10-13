@@ -1,14 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AutomapperModule } from '@automapper/nestjs';
-import { classes } from '@automapper/classes';
+import { AuthModule } from './controllers/auth.module';
 @Module({
-  imports: [
-    AutomapperModule.forRoot({
-      strategyInitializer: classes(),
-    }),
-  ],
+  imports: [AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
