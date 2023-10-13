@@ -9,21 +9,25 @@ export class List {
   public title: string;
 
   @AutoMap()
-  items: Item[];
+  public items: Item[];
 
   @AutoMap()
-  createdAt: Date;
+  public userId: string;
 
   @AutoMap()
-  updatedAt?: Date;
+  public createdAt: Date;
 
   @AutoMap()
-  deletedAt?: Date;
+  public updatedAt?: Date;
+
+  @AutoMap()
+  public deletedAt?: Date;
 
   constructor(
     id: string,
     title: string,
     items: Item[],
+    userId: string,
     createdAt: Date,
     updateAt?: Date,
     deletedAt?: Date,
@@ -31,6 +35,7 @@ export class List {
     this.id = id;
     this.title = title;
     this.items = items;
+    this.userId = userId;
     this.createdAt = createdAt;
     this.updatedAt = updateAt;
     this.deletedAt = deletedAt;

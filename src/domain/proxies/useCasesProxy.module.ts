@@ -8,13 +8,19 @@ import { UserModule } from '@/data/remote/repositories/User/user.module';
 import { BcryptModule } from '@/infra/bcrypt/bcrypt.module';
 import { UseCaseProxy } from '@/core/UseCaseProxy';
 import { GetProfileUseCase } from '../useCases/GetProfileUseCase';
+import { ITodoListRepository } from '../repositories/ITodoListRepository';
+import { TodoListRepository } from '@/data/remote/repositories/Todo/todo.repository';
+import { CreateTodoListUseCase } from '../useCases/CreateTodoListUseCase';
+
+import { TodoModule } from '@/data/remote/repositories/Todo/todo.module';
 
 @Module({
-  imports: [UserModule, BcryptModule],
+  imports: [UserModule, BcryptModule, TodoModule],
 })
 export class UseCasesProxyModule {
   static LOGIN_USECASE_PROXY = 'LoginUseCaseProxy';
   static GET_PROFILE_USECASE_PROXY = 'GetProfileUseCaseProxy';
+  static CREATE_TODO_LIST_USECASE_PROXY = 'CreateTodoListUseCaseProxy';
 
   static register(): DynamicModule {
     return {
@@ -35,10 +41,17 @@ export class UseCasesProxyModule {
           useFactory: (userRepostory: IUserRepository) =>
             new UseCaseProxy(new GetProfileUseCase(userRepostory)),
         },
+        {
+          inject: [TodoListRepository],
+          provide: UseCasesProxyModule.CREATE_TODO_LIST_USECASE_PROXY,
+          useFactory: (todoListRepository: ITodoListRepository) =>
+            new UseCaseProxy(new CreateTodoListUseCase(todoListRepository)),
+        },
       ],
       exports: [
         UseCasesProxyModule.LOGIN_USECASE_PROXY,
         UseCasesProxyModule.GET_PROFILE_USECASE_PROXY,
+        UseCasesProxyModule.CREATE_TODO_LIST_USECASE_PROXY,
       ],
     };
   }
