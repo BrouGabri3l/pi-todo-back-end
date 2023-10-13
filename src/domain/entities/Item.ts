@@ -16,10 +16,14 @@ export class Item {
   @AutoMap()
   public deletedAt?: Date;
 
+  @AutoMap()
+  public listId: string;
+
   constructor(
     id: string,
     description: string,
     createdAt: Date,
+    listId: string,
     updatedAt?: Date,
     deletedAt?: Date,
   ) {
@@ -28,5 +32,6 @@ export class Item {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.deletedAt = deletedAt;
+    this.listId = listId;
   }
 }

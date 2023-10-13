@@ -1,5 +1,4 @@
 import { AutoMap } from '@automapper/classes';
-import { List } from './List';
 
 export class User {
   @AutoMap()
@@ -14,19 +13,9 @@ export class User {
   @AutoMap()
   public password: string;
 
-  @AutoMap()
-  public lists: List[];
-
-  constructor(
-    id: string,
-    name: string,
-    email: string,
-    password: string,
-    lists: List[],
-  ) {
+  constructor(id: string, name: string, email: string, password: string) {
     this.name = name;
     this.email = email;
     this.password = password;
-    this.lists = lists;
   }
 }
