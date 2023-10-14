@@ -66,7 +66,7 @@ export class TodoListRepository implements ITodoListRepository {
     try {
       const list = await this._prisma.list.findUnique({
         where: { id: params.id, deletedAt: null },
-        include: { items: true },
+        include: { items: { where: { deletedAt: null } } },
       });
       return right(list);
     } catch (error) {
