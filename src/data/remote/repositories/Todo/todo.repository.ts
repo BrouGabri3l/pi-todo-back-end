@@ -17,6 +17,10 @@ interface IGetAllTodoListsParams {
 interface IGetTodoListParams {
   id: string;
 }
+
+interface IDeleteTodoListParams {
+  id: string;
+}
 @Injectable()
 export class TodoListRepository implements ITodoListRepository {
   constructor(private readonly _prisma: PrismaService) {}
@@ -45,7 +49,7 @@ export class TodoListRepository implements ITodoListRepository {
   ): Promise<TEither<TApplicationError, ListSummary[]>> {
     try {
       const lists = await this._prisma.list.findMany({
-        where: { userId: params.userId },
+        where: { userId: params.userId, deletedAt: null },
       });
       return right(lists);
     } catch (error) {
@@ -61,10 +65,27 @@ export class TodoListRepository implements ITodoListRepository {
   ): Promise<TEither<TApplicationError, List>> {
     try {
       const list = await this._prisma.list.findUnique({
-        where: { id: params.id },
+        where: { id: params.id, deletedAt: null },
         include: { items: true },
       });
       return right(list);
+    } catch (error) {
+      if (error instanceof Error)
+        return left(new CriticalError({ error: [error.message] }));
+      return left(
+        new CriticalError({ critical: ['A critical error happened'] }),
+      );
+    }
+  }
+  async delete(
+    params: IDeleteTodoListParams,
+  ): Promise<TEither<TApplicationError, void>> {
+    try {
+      await this._prisma.list.update({
+        where: { id: params.id },
+        data: { deletedAt: new Date() },
+      });
+      return right(undefined);
     } catch (error) {
       if (error instanceof Error)
         return left(new CriticalError({ error: [error.message] }));

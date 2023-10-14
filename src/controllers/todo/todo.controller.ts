@@ -1,6 +1,7 @@
 import { UseCaseProxy } from '@/core/UseCaseProxy';
 import { UseCasesProxyModule } from '@/domain/proxies/useCasesProxy.module';
 import { CreateTodoListUseCase } from '@/domain/useCases/CreateTodoListUseCase';
+import { DeleteTodoListUseCase } from '@/domain/useCases/DeleteTodoListUseCase';
 import { GetTodoListUseCase } from '@/domain/useCases/GetTodoListUseCase';
 import { GetTodoListsSummary } from '@/domain/useCases/GetTodoListsSummary';
 
@@ -14,6 +15,7 @@ import {
   Post,
   Get,
   Param,
+  Delete,
 } from '@nestjs/common';
 
 interface ICreateTodoListParams {
@@ -23,6 +25,10 @@ interface ICreateTodoListParams {
 interface IGetTodoListParams {
   id: string;
 }
+interface IDeleteTodoListParams {
+  id: string;
+}
+
 @Controller('/todoList')
 export class TodoListController {
   constructor(
@@ -32,6 +38,8 @@ export class TodoListController {
     private readonly getTodoListsSummaryUseCase: UseCaseProxy<GetTodoListsSummary>,
     @Inject(UseCasesProxyModule.GET_TODO_LIST_USECASE_PROXY)
     private readonly getTodoListUseCase: UseCaseProxy<GetTodoListUseCase>,
+    @Inject(UseCasesProxyModule.DELETE_TODO_LIST_USECASE_PROXY)
+    private readonly deleteTodoListUseCase: UseCaseProxy<DeleteTodoListUseCase>,
   ) {}
 
   @HttpCode(HttpStatus.OK)
@@ -58,6 +66,14 @@ export class TodoListController {
   @Get('/:id')
   async get(@Param() params: IGetTodoListParams) {
     const result = await this.getTodoListUseCase.getInstance().execute(params);
+    return result;
+  }
+  @HttpCode(HttpStatus.OK)
+  @Delete('/:id')
+  async delete(@Param() params: IDeleteTodoListParams) {
+    const result = await this.deleteTodoListUseCase
+      .getInstance()
+      .execute(params);
     return result;
   }
 }

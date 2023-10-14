@@ -14,6 +14,10 @@ interface IGetTodoListParams {
   id: string;
 }
 
+interface IDeleteTodoListParams {
+  id: string;
+}
+
 export interface ITodoListRepository {
   create(
     params: ICreateTodoListParams,
@@ -22,4 +26,7 @@ export interface ITodoListRepository {
     params: IGetAllTodoListsParams,
   ): Promise<TEither<TApplicationError, ListSummary[]>>;
   get(params: IGetTodoListParams): Promise<TEither<TApplicationError, List>>;
+  delete(
+    params: IDeleteTodoListParams,
+  ): Promise<TEither<TApplicationError, void>>;
 }

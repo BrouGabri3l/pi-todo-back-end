@@ -15,6 +15,7 @@ import { CreateTodoListUseCase } from '../useCases/CreateTodoListUseCase';
 import { TodoModule } from '@/data/remote/repositories/Todo/todo.module';
 import { GetTodoListsSummary } from '../useCases/GetTodoListsSummary';
 import { GetTodoListUseCase } from '../useCases/GetTodoListUseCase';
+import { DeleteTodoListUseCase } from '../useCases/DeleteTodoListUseCase';
 
 @Module({
   imports: [UserModule, BcryptModule, TodoModule],
@@ -25,6 +26,7 @@ export class UseCasesProxyModule {
   static CREATE_TODO_LIST_USECASE_PROXY = 'CreateTodoListUseCaseProxy';
   static GET_ALL_TODO_LISTS_USECASE_PROXY = 'GetAllTodoListsUseCaseProxy';
   static GET_TODO_LIST_USECASE_PROXY = 'GetTodoListUseCaseProxy';
+  static DELETE_TODO_LIST_USECASE_PROXY = 'DeleteTodoListUseCaseProxy';
 
   static register(): DynamicModule {
     return {
@@ -63,6 +65,12 @@ export class UseCasesProxyModule {
           useFactory: (todoListRepository: ITodoListRepository) =>
             new UseCaseProxy(new GetTodoListUseCase(todoListRepository)),
         },
+        {
+          inject: [TodoListRepository],
+          provide: UseCasesProxyModule.DELETE_TODO_LIST_USECASE_PROXY,
+          useFactory: (todoListRepository: ITodoListRepository) =>
+            new UseCaseProxy(new DeleteTodoListUseCase(todoListRepository)),
+        },
       ],
       exports: [
         UseCasesProxyModule.LOGIN_USECASE_PROXY,
@@ -70,6 +78,7 @@ export class UseCasesProxyModule {
         UseCasesProxyModule.CREATE_TODO_LIST_USECASE_PROXY,
         UseCasesProxyModule.GET_ALL_TODO_LISTS_USECASE_PROXY,
         UseCasesProxyModule.GET_TODO_LIST_USECASE_PROXY,
+        UseCasesProxyModule.DELETE_TODO_LIST_USECASE_PROXY,
       ],
     };
   }
