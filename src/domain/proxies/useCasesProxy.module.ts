@@ -20,6 +20,7 @@ import { ITodoItemRepository } from '../repositories/ITodoItemRepository';
 import { CreateTodoItemUseCase } from '../useCases/CreateTodoItemUseCase';
 import { TodoItemRepository } from '@/data/remote/repositories/Item/item.repository';
 import { TodoItemModule } from '@/data/remote/repositories/Item/item.module';
+import { DeleteTodoItemUseCase } from '../useCases/DeleteTodoItemUseCase';
 
 @Module({
   imports: [UserModule, BcryptModule, TodoModule, TodoItemModule],
@@ -32,6 +33,7 @@ export class UseCasesProxyModule {
   static GET_ALL_TODO_LISTS_USECASE_PROXY = 'GetAllTodoListsUseCaseProxy';
   static GET_TODO_LIST_USECASE_PROXY = 'GetTodoListUseCaseProxy';
   static DELETE_TODO_LIST_USECASE_PROXY = 'DeleteTodoListUseCaseProxy';
+  static DELETE_TODO_ITEM_USECASE_PROXY = 'DeleteTodoItemUseCaseProxy';
 
   static register(): DynamicModule {
     return {
@@ -78,6 +80,12 @@ export class UseCasesProxyModule {
         },
         {
           inject: [TodoItemRepository],
+          provide: UseCasesProxyModule.DELETE_TODO_ITEM_USECASE_PROXY,
+          useFactory: (todoItemRepository: ITodoItemRepository) =>
+            new UseCaseProxy(new DeleteTodoItemUseCase(todoItemRepository)),
+        },
+        {
+          inject: [TodoItemRepository],
           provide: UseCasesProxyModule.CREATE_TODO_ITEM_USECASE_PROXY,
           useFactory: (todoItemRepository: ITodoItemRepository) =>
             new UseCaseProxy(new CreateTodoItemUseCase(todoItemRepository)),
@@ -91,6 +99,7 @@ export class UseCasesProxyModule {
         UseCasesProxyModule.GET_ALL_TODO_LISTS_USECASE_PROXY,
         UseCasesProxyModule.GET_TODO_LIST_USECASE_PROXY,
         UseCasesProxyModule.DELETE_TODO_LIST_USECASE_PROXY,
+        UseCasesProxyModule.DELETE_TODO_ITEM_USECASE_PROXY,
       ],
     };
   }

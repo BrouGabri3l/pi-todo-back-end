@@ -9,6 +9,9 @@ interface ICreateTodoItemParams {
   listId: string;
 }
 
+interface IDeleteTodoItemParams {
+  id: string;
+}
 @Injectable()
 export class TodoItemRepository implements ITodoItemRepository {
   constructor(private readonly _prisma: PrismaService) {}
@@ -19,6 +22,24 @@ export class TodoItemRepository implements ITodoItemRepository {
     try {
       await this._prisma.item.create({
         data: { listId: params.listId, description: '' },
+      });
+      return right(undefined);
+    } catch (error) {
+      if (error instanceof Error)
+        return left(new CriticalError({ error: [error.message] }));
+      return left(
+        new CriticalError({ critical: ['A critical error happened'] }),
+      );
+    }
+  }
+
+  async delete(
+    params: IDeleteTodoItemParams,
+  ): Promise<TEither<TApplicationError, void>> {
+    try {
+      await this._prisma.item.update({
+        where: { id: params.id },
+        data: { deletedAt: new Date() },
       });
       return right(undefined);
     } catch (error) {
