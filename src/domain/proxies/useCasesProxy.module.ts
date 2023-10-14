@@ -16,14 +16,19 @@ import { TodoModule } from '@/data/remote/repositories/Todo/todo.module';
 import { GetTodoListsSummary } from '../useCases/GetTodoListsSummary';
 import { GetTodoListUseCase } from '../useCases/GetTodoListUseCase';
 import { DeleteTodoListUseCase } from '../useCases/DeleteTodoListUseCase';
+import { ITodoItemRepository } from '../repositories/ITodoItemRepository';
+import { CreateTodoItemUseCase } from '../useCases/CreateTodoItemUseCase';
+import { TodoItemRepository } from '@/data/remote/repositories/Item/item.repository';
+import { TodoItemModule } from '@/data/remote/repositories/Item/item.module';
 
 @Module({
-  imports: [UserModule, BcryptModule, TodoModule],
+  imports: [UserModule, BcryptModule, TodoModule, TodoItemModule],
 })
 export class UseCasesProxyModule {
   static LOGIN_USECASE_PROXY = 'LoginUseCaseProxy';
   static GET_PROFILE_USECASE_PROXY = 'GetProfileUseCaseProxy';
   static CREATE_TODO_LIST_USECASE_PROXY = 'CreateTodoListUseCaseProxy';
+  static CREATE_TODO_ITEM_USECASE_PROXY = 'CreateTodoItemUseCaseProxy';
   static GET_ALL_TODO_LISTS_USECASE_PROXY = 'GetAllTodoListsUseCaseProxy';
   static GET_TODO_LIST_USECASE_PROXY = 'GetTodoListUseCaseProxy';
   static DELETE_TODO_LIST_USECASE_PROXY = 'DeleteTodoListUseCaseProxy';
@@ -71,11 +76,18 @@ export class UseCasesProxyModule {
           useFactory: (todoListRepository: ITodoListRepository) =>
             new UseCaseProxy(new DeleteTodoListUseCase(todoListRepository)),
         },
+        {
+          inject: [TodoItemRepository],
+          provide: UseCasesProxyModule.CREATE_TODO_ITEM_USECASE_PROXY,
+          useFactory: (todoItemRepository: ITodoItemRepository) =>
+            new UseCaseProxy(new CreateTodoItemUseCase(todoItemRepository)),
+        },
       ],
       exports: [
         UseCasesProxyModule.LOGIN_USECASE_PROXY,
         UseCasesProxyModule.GET_PROFILE_USECASE_PROXY,
         UseCasesProxyModule.CREATE_TODO_LIST_USECASE_PROXY,
+        UseCasesProxyModule.CREATE_TODO_ITEM_USECASE_PROXY,
         UseCasesProxyModule.GET_ALL_TODO_LISTS_USECASE_PROXY,
         UseCasesProxyModule.GET_TODO_LIST_USECASE_PROXY,
         UseCasesProxyModule.DELETE_TODO_LIST_USECASE_PROXY,

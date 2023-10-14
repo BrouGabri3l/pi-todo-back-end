@@ -30,7 +30,7 @@ model List {
   createdAt DateTime  @default(now())
   updateAt  DateTime? @updatedAt
   deletedAt DateTime?
-  userId    String    @unique
+  userId    String
 }
 
 model Item {
@@ -41,5 +41,5 @@ model Item {
   updatedAt DateTime? @updatedAt
   deletedAt DateTime?
   List      List?     @relation(fields: [listId], references: [id])
-  listId    String?   @unique
+  listId    String?
 }
