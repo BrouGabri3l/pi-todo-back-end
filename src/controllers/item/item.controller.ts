@@ -11,12 +11,15 @@ import {
   Post,
   Param,
   Delete,
+  Body,
 } from '@nestjs/common';
 
 interface ICreateTodoItemParams {
   listId: string;
 }
-
+interface ICreateTodoItemBody {
+  description: string;
+}
 interface IDeleteTodoItemParams {
   id: string;
 }
@@ -32,10 +35,13 @@ export class TodoItemController {
   @HttpCode(HttpStatus.OK)
   @Post('/:listId')
   //TODO: adjusts return
-  async create(@Param() params: ICreateTodoItemParams) {
+  async create(
+    @Param() params: ICreateTodoItemParams,
+    @Body() body: ICreateTodoItemBody,
+  ) {
     const result = await this.createTodoItemUseCase
       .getInstance()
-      .execute({ listId: params.listId });
+      .execute({ listId: params.listId, description: body.description });
     return result;
   }
   @HttpCode(HttpStatus.OK)

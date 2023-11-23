@@ -7,6 +7,7 @@ import { Injectable } from '@nestjs/common';
 
 interface ICreateTodoItemParams {
   listId: string;
+  description: string;
 }
 
 interface IDeleteTodoItemParams {
@@ -21,7 +22,7 @@ export class TodoItemRepository implements ITodoItemRepository {
   ): Promise<TEither<TApplicationError, void>> {
     try {
       await this._prisma.item.create({
-        data: { listId: params.listId, description: '' },
+        data: { listId: params.listId, description: params.description },
       });
       return right(undefined);
     } catch (error) {

@@ -5,6 +5,7 @@ import { TApplicationError } from '../errors/ApplicationError';
 
 interface ICreateTodoItemUseCaseParams {
   listId: string;
+  description: string;
 }
 
 export class CreateTodoItemUseCase implements IUsecase {
