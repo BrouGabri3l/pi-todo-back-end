@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
 import { UserSeed } from './user';
+import { TodoListSeed } from './todoList';
 
 const prisma = new PrismaClient();
 
@@ -8,7 +9,7 @@ async function main() {
   console.log(`Start seeding ...`);
 
   await UserSeed.run(prisma);
-
+  await TodoListSeed.run(prisma);
   console.log(`Seeding finished.`);
 }
 
